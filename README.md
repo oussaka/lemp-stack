@@ -22,7 +22,7 @@ Installation
 Clone the repository:
 
 
-	$ git clone git@github.com:oussamak/lemp-stack.git
+	$ git clone https://github.com/oussaka/lemp-stack.git
 	$ cd lemp-stack
 
 Then, you should be able to use:
