@@ -6,13 +6,13 @@ Description
 
 Setup a LEMP dev environment using Vagrant and PuPHPet.
 
-INSTALL/SETUP A BASIC LEMP STACK (LINUX, NGINX, MYSQL, PHP) ON Ubuntu Trusty 14.04 LTS x64
+INSTALL/SETUP A BASIC LEMP STACK (LINUX, NGINX, MYSQL, PHP) ON Ubuntu Trusty 16.04 LTS x64
 
 Requirements
 ------------
 
-* [VirtualBox](https://www.virtualbox.org)
-* [Vagrant](http://vagrantup.com)
+* [VirtualBox](https://www.virtualbox.org) (The official recommended Virtualbox version is 5.0.26!)
+* [Vagrant](http://vagrantup.com) (version 1.8.6 or newer)
 * abandon your old WAMP/MAMP environnement 
 * some patience :)
 
@@ -45,13 +45,15 @@ What's Inside
 #### Installed software:
 
 
-* Ubuntu Trusty 14.04 LTS x64
-* nginx 1.8.0 (ppa: https://launchpad.net/~ondrej/+archive/ubuntu/nginx)
-* mysql 5.6
+* Ubuntu Trusty 16.04 LTS x64
+* nginx 1.10.2 (ppa: https://launchpad.net/~ondrej/+archive/ubuntu/nginx)
+* MariaDB Server 10.2
 * php 5.6.9 (ppa: https://launchpad.net/~ondrej/+archive/ubuntu/php5-5.6)
 * git
-* node 0.12
-* npm 2.10
+* node 6
+* npm 3.10
+* redis server 3.0.6
+* MailHog (port 8025)
 
 
 Information
@@ -60,9 +62,8 @@ Information
 * Virtual Machine IP: 192.168.56.101
 * go to http://local.dev
 * PHP 5.6 installed
-* User/password: vagrant/vagrant
-* MySQL user/password: root/admin
-* node, npm (some useful packages: grunt, grunt-cli, yoeman, bower, express, gulp)
+* MySQL user/password: user/pass
+* node, npm (some useful packages: grunt, grunt-cli, yoeman, bower, express, gulp, ungit)
 
 
 How do I update my hosts file?
@@ -92,7 +93,7 @@ then, resume to hack again
 	$ vagrant resume
 
 
-Run
+run
 
 	$ vagrant halt
 
