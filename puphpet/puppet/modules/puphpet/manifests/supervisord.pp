@@ -3,15 +3,15 @@
 
 class puphpet::supervisord {
 
-  if ! defined(Class['::supervisord']) {
-    class{ 'puphpet::python::pip': }
+  include ::puphpet::python::pip
 
+  Exec['easy_install pip']
+  -> Class['Supervisord::Install']
+
+  if ! defined(Class['supervisord']) {
     class { '::supervisord':
       install_pip => false,
-      require     => [
-        Class['puphpet::firewall::post'],
-        Class['puphpet::python::pip'],
-      ],
+      require     => Class['puphpet::firewall::post'],
     }
   }
 

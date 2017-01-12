@@ -38,6 +38,7 @@ Puppet::Type.type(:rabbitmq_exchange).provide(:rabbitmqadmin, :parent => Puppet:
     self.run_with_retries {
       rabbitmqctl('-q', 'list_exchanges', '-p', vhost, 'name', 'type', 'internal', 'durable', 'auto_delete', 'arguments')
     }.split(/\n/).each do |exchange|
+      next if exchange =~ /^federation:/
       exchanges.push(exchange)
     end
     exchanges
@@ -98,7 +99,12 @@ Puppet::Type.type(:rabbitmq_exchange).provide(:rabbitmqadmin, :parent => Puppet:
     if arguments.nil?
       arguments = {}
     end
-    rabbitmqadmin('declare', 'exchange', vhost_opt, "--user=#{resource[:user]}", "--password=#{resource[:password]}", "name=#{name}", "type=#{resource[:type]}", "internal=#{resource[:internal]}", "durable=#{resource[:durable]}", "auto_delete=#{resource[:auto_delete]}", "arguments=#{arguments.to_json}", '-c', '/etc/rabbitmq/rabbitmqadmin.conf')
+    cmd = ['declare', 'exchange', vhost_opt, "--user=#{resource[:user]}", "--password=#{resource[:password]}", "name=#{name}", "type=#{resource[:type]}",]
+    cmd << "internal=#{resource[:internal]}" if resource[:internal]
+    cmd << "durable=#{resource[:durable]}" if resource[:durable]
+    cmd << "auto_delete=#{resource[:auto_delete]}" if resource[:auto_delete]
+    cmd += ["arguments=#{arguments.to_json}", '-c', '/etc/rabbitmq/rabbitmqadmin.conf']
+    rabbitmqadmin(*cmd)
     @property_hash[:ensure] = :present
   end
 

@@ -5,7 +5,7 @@ include ::apt
   #
   # http://www.postgresql.org/download/linux/debian/
   #
-  apt::pin { 'apt.postgresql.org':
+  apt::pin { 'apt_postgresql_org':
     originator => 'apt.postgresql.org',
     priority   => 500,
   }->
@@ -13,10 +13,11 @@ include ::apt
     location    => 'http://apt.postgresql.org/pub/repos/apt/',
     release     => "${::lsbdistcodename}-pgdg",
     repos       => "main ${postgresql::repo::version}",
-    key         => 'ACCC4CF8',
+    key         => 'B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8',
     key_source  => 'https://www.postgresql.org/media/keys/ACCC4CF8.asc',
     include_src => false,
   }
 
   Apt::Source['apt.postgresql.org']->Package<|tag == 'postgresql'|>
+  Class['Apt::Update'] -> Package<|tag == 'postgresql'|>
 }

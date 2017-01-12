@@ -58,9 +58,8 @@ class php::params {
   }
 
   $config_file = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint)/ => '/etc/php5/php.ini',
-    /(?i:SLES|OpenSuSE)/      => '/etc/php5/apache2/php.ini',
-    default                   => '/etc/php.ini',
+    /(?i:Ubuntu|Debian|Mint|SLES|OpenSuSE)/ => '/etc/php5/apache2/php.ini',
+    default                                 => '/etc/php.ini',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -98,11 +97,20 @@ class php::params {
   $version = 'present'
   $service_autorestart = true
   $absent = false
+  $install_options = []
 
   ### General module variables that can have a site or per module default
   $puppi = false
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
+
+  $monitor = ''
+  $monitor_tool = ''
+  $monitor_target = ''
+  $config_file_init = ''
+  $pid_file = ''
+  $port = ''
+  $protocol = ''
 
 }

@@ -1,52 +1,65 @@
 vagrantfile:
     target: local
     vm:
-        box: puphpet/ubuntu1404-x64
-        box_url: puphpet/ubuntu1404-x64
-        hostname: lemp.local
-        memory: '512'
-        cpus: '1'
-        chosen_provider: virtualbox
-        network:
-            private_network: 192.168.56.101
-            forwarded_port:
-                vflnp_ko6760yz8z9r:
-                    host: '9241'
-                    guest: '22'
-                vflnp_ssgns3dd3ffs:
-                    host: '8100'
-                    guest: '8100'
-                vflnp_w0pznr37c1o0:
-                    host: '8080'
-                    guest: '8080'
-        post_up_message: ''
         provider:
-            virtualbox:
-                modifyvm:
-                    natdnshostresolver1: on
-                showgui: ''
-            vmware:
-                numvcpus: 1
-            parallels:
-                cpus: 1
+            local:
+                box: puphpet/ubuntu1604-x64
+                box_url: puphpet/ubuntu1604-x64
+                box_version: '0'
+                chosen_virtualizer: virtualbox
+                virtualizers:
+                    virtualbox:
+                        modifyvm:
+                            natdnshostresolver1: false
+                        showgui: 0
+                    vmware:
+                        numvcpus: 1
+                    parallels:
+                        linked_clone: 0
+                        check_guest_tools: 0
+                        update_guest_tools: 0
+                machines:
+                    vflm_6u0otzpezdw1:
+                        id: lemp-ub16
+                        hostname: lemp-vm
+                        network:
+                            private_network: 192.168.56.101
+                            forwarded_port:
+                                vflmnfp_o22r0rhvalvh:
+                                    host: '7761'
+                                    guest: '22'
+                                vflmnfp_bhr4hpxrejop:
+                                    host: '3000'
+                                    guest: '3000'
+                                vflmnfp_rtrlwp1jw83v:
+                                    host: '8080'
+                                    guest: '8080'
+                                vflmnfp_x90aslegshzp:
+                                    host: '8000'
+                                    guest: '8000'
+                        memory: '1024'
+                        cpus: '1'
         provision:
             puppet:
-                manifests_path: puphpet/puppet
-                manifest_file: site.pp
-                module_path: puphpet/puppet/modules
+                manifests_path: puphpet/puppet/manifests
+                module_path:
+                    - puphpet/puppet/modules
+                    - puphpet/puppet/manifests
                 options:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
-                    - '--parser future'
         synced_folder:
-            vflsf_gzdfae1tryir:
+            vflsf_y521za732lry:
                 source: ./www
-                target: /var/www/local
+                target: /var/www/
                 sync_type: default
                 smb:
                     smb_host: ''
                     smb_username: ''
                     smb_password: ''
+                    mount_options:
+                        dir_mode: '0775'
+                        file_mode: '0664'
                 rsync:
                     args:
                         - '--verbose'
@@ -61,25 +74,52 @@ vagrantfile:
         usable_port_range:
             start: 10200
             stop: 10500
+        post_up_message: ''
     ssh:
-        host: null
-        port: null
-        private_key_path: null
+        host: 'false'
+        port: 'false'
+        private_key_path: 'false'
         username: vagrant
-        guest_port: null
-        keep_alive: true
-        forward_agent: false
-        forward_x11: false
+        guest_port: 'false'
+        keep_alive: '1'
+        forward_agent: 'false'
+        forward_x11: 'false'
         shell: 'bash -l'
+        insert_key: 'false'
     vagrant:
         host: detect
+    proxy:
+        http: ''
+        https: ''
+        ftp: ''
+        no_proxy: ''
 server:
     install: '1'
-    packages: {  }
+    packages:
+        - vim-common
+        - libcurl3-dev
+        - varnish
+        - gcc
+        - make
+        - autoconf
+        - libc-dev
+        - pkg-config
+        - mycli
+        - htop
+        - unzip
 users_groups:
     install: '1'
     groups: {  }
     users: {  }
+locale:
+    install: '1'
+    settings:
+        default_locale: en_US.UTF-8
+        locales:
+            - en_GB.UTF-8
+            - en_US.UTF-8
+            - fr_FR.UTF-8
+        timezone: UTC
 firewall:
     install: '1'
     rules: {  }
@@ -89,20 +129,22 @@ cron:
 nginx:
     install: '1'
     settings:
+        version: present
         default_vhost: 1
-        proxy_buffer_size: 128k
         proxy_buffers: '4 256k'
+        proxy_buffer_size: 128k
+        proxy_connect_timeout: 600s
+        proxy_send_timeout: 600s
+        proxy_read_timeout: 600s
+        names_hash_bucket_size: 128
     upstreams: {  }
     vhosts:
         local.dev:
             server_name: local.dev
             server_aliases:
                 - www.local.dev
-            www_root: /var/www/local
+            www_root: /var/www/
             listen_port: '80'
-            index_files:
-                - index.php
-                - index.html
             client_max_body_size: 1m
             ssl: '0'
             ssl_cert: ''
@@ -113,9 +155,15 @@ nginx:
             rewrite_to_https: '1'
             spdy: '1'
             locations:
-                nxvl_ygt11jvae0bq:
+                nxvl_fjhix6nioez3:
+                    www_root: ''
                     location: /
-                    autoindex: on
+                    autoindex: 'on'
+                    index_files:
+                        - index.html
+                        - index.htm
+                        - index.php
+                        - /_h5ai/public/index.php
                     try_files:
                         - $uri
                         - $uri/
@@ -123,9 +171,11 @@ nginx:
                     fastcgi: ''
                     fastcgi_index: ''
                     fastcgi_split_path: ''
-                nxvl_6pf6yj8s4jj0:
+                    proxy: ''
+                    proxy_redirect: ''
+                nxvl_6hvpe4z8hr1a:
+                    www_root: ''
                     location: '~ \.php$'
-                    autoindex: on
                     try_files:
                         - $uri
                         - $uri/
@@ -136,10 +186,13 @@ nginx:
                     fast_cgi_params_extra:
                         - 'SCRIPT_FILENAME $request_filename'
                         - 'APP_ENV dev'
+                    proxy: ''
+                    proxy_redirect: ''
     proxies: {  }
 apache:
     install: '0'
     settings:
+        version: 2.4
         user: www-data
         group: www-data
         default_vhost: true
@@ -150,11 +203,11 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_bco3d5jvq14w:
-            servername: awesome.dev
+        av_ohevig49yddm:
+            servername: local.dev
             serveraliases:
-                - www.awesome.dev
-            docroot: /var/www/awesome
+                - www.local.dev
+            docroot: /var/www/
             port: '80'
             setenv:
                 - 'APP_ENV dev'
@@ -167,8 +220,8 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_zz0s06598vxw:
-                    path: /var/www/awesome
+                avd_ky256ql1h13t:
+                    path: /var/www/
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -179,36 +232,48 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        avdfm_nibqm48ewz9l:
+                        avdfm_6jblsda4gy3x:
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
                             provider: filesmatch
                     provider: directory
+letsencrypt:
+    install: '1'
+    settings:
+        email: ''
+    domains: {  }
 php:
     install: '1'
     settings:
-        version: '56'
+        version: '5.6'
     modules:
         php:
             - cli
             - intl
+            - common
             - mcrypt
             - gd
             - curl
+            - memcached
+            - mbstring
+            - tidy
+            - cgi
+            - xsl
+            - zip
         pear: {  }
         pecl:
-            - pecl_http
+            - memcache
+            - redis
     ini:
-        display_errors: On
+        display_errors: 'On'
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
         date.timezone: UTC
-        max_execution_time: '180'
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_zvbq8grm4we5:
+        phpfp_lcrn6g3omsx7:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
@@ -226,7 +291,6 @@ xdebug:
         xdebug.remote_enable: '1'
         xdebug.remote_handler: dbgp
         xdebug.remote_port: '9000'
-        xdebug.max_nesting_level: '1000'
 blackfire:
     install: '0'
     settings:
@@ -258,15 +322,19 @@ python:
     versions: {  }
 nodejs:
     install: '1'
+    settings:
+        version: '6'
     npm_packages:
-        - yo
         - bower
+        - grunt-cli
+        - grunt
         - gulp
-        - cordova
-        - ionic
+        - yo
+        - express
+        - express-generator
+        - ungit
 hhvm:
     install: '0'
-    nightly: 0
     composer: '1'
     composer_home: ''
     settings: {  }
@@ -276,29 +344,44 @@ hhvm:
         hhvm.log.use_log_file: '1'
         hhvm.log.file: /var/log/hhvm/error.log
     php_ini:
-        display_errors: On
+        display_errors: 'On'
         error_reporting: '-1'
         date.timezone: UTC
-mysql:
+mariadb:
     install: '1'
+    settings:
+        version: '10.2'
+        root_password: rootpwd
+        override_options: {  }
+    adminer: 0
+    users:
+        mariadbnu_nhlg75ujrxa7:
+            name: user
+            password: pass
+    databases:
+        mariadbnd_7iirh34patun:
+            name: dbname
+            sql: ''
+    grants:
+        mariadbng_xfkwgd2wjeht:
+            user: user
+            table: '*.*'
+            privileges:
+                - ALL
+mysql:
+    install: '0'
     settings:
         version: '5.6'
         root_password: admin
         override_options: {  }
     adminer: 0
     users:
-        mysqlnu_ezqnpois9vfg:
+        mysqlnu_u2pp7zp9zd1s:
             name: admin
             password: admin
-    databases:
-        mysqlnd_3nw43wnspja1:
-            name: sakila
-            sql: ''
-        mysqlnd_ya938tld3gh5:
-            name: dummyDB
-            sql: ''
+    databases: {  }
     grants:
-        mysqlng_evqkobn4xhpx:
+        mysqlng_uv6n59cmf65f:
             user: admin
             table: '*.*'
             privileges:
@@ -318,27 +401,31 @@ postgresql:
 mongodb:
     install: '0'
     settings:
-        auth: 1
         bind_ip: 127.0.0.1
         port: '27017'
-    databases: {  }
+    globals:
+        version: 2.6.0
+    databases:
+        mongodbnuad_rs0txlclvb2t:
+            name: meandb
+            user: user
+            password: pass
 redis:
-    install: '0'
+    install: '1'
     settings:
-        conf_port: '6379'
+        port: '6379'
 sqlite:
     install: '0'
     adminer: 0
     databases: {  }
-mailcatcher:
+mailhog:
     install: '1'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025
         http_ip: 0.0.0.0
-        http_port: '1080'
-        mailcatcher_path: /usr/local/rvm/wrappers/default
-        from_email_method: headers
+        http_port: '8025'
+        path: /usr/local/bin/mailhog
 beanstalkd:
     install: '0'
     settings:
@@ -350,7 +437,6 @@ beanstalkd:
         binlogfsync: null
         binlogsize: '10485760'
     beanstalk_console: 0
-    binlogdir: /var/lib/beanstalkd/binlog
 rabbitmq:
     install: '0'
     settings:
@@ -363,6 +449,7 @@ elastic_search:
     settings:
         version: 1.4.1
         java_install: true
+    instances: {  }
 solr:
     install: '0'
     settings:

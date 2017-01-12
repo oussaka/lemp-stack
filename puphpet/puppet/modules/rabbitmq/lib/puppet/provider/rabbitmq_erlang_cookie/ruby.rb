@@ -3,9 +3,14 @@ require 'set'
 Puppet::Type.type(:rabbitmq_erlang_cookie).provide(:ruby) do
 
   defaultfor :feature => :posix
-  has_command(:puppet, 'puppet') do
-    environment :PATH => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
+
+  env_path = '/opt/puppetlabs/bin:/usr/local/bin:/usr/bin:/bin'
+  puppet_path = Puppet::Util.withenv(:PATH => env_path) do
+    Puppet::Util.which('puppet')
   end
+
+  confine :false => puppet_path.nil?
+  has_command(:puppet, puppet_path) unless puppet_path.nil?
 
   def exists?
     # Hack to prevent the create method from being called.
@@ -16,7 +21,7 @@ Puppet::Type.type(:rabbitmq_erlang_cookie).provide(:ruby) do
   def content=(value)
     if resource[:force] == :true # Danger!
       puppet('resource', 'service', resource[:service_name], 'ensure=stopped')
-      FileUtils.rm_rf(resource[:rabbitmq_home] + File::PATH_SEPARATOR + 'mnesia')
+      FileUtils.rm_rf(resource[:rabbitmq_home] + File::SEPARATOR + 'mnesia')
       File.open(resource[:path], 'w') do |cookie|
         cookie.chmod(0400)
         cookie.write(value)
