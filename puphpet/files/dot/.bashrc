@@ -3,6 +3,7 @@
 [ -r ~/.git-completion.bash ] && source ~/.git-completion.bash
 [ -r ~/.git-prompt.sh ] && source ~/.git-prompt.sh
 [ -r /usr/local/rvm/scripts/rvm ] && source /usr/local/rvm/scripts/rvm
+[ -r ~/.bash_aliases ] && source ~/.bash_aliases
 
 __has_parent_dir () {
     # Utility function so we can test for things like .git/.hg without firing up a
@@ -30,6 +31,15 @@ __vcs_name() {
     fi
 }
 
+# ANSI colors: http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
+RED="\[\033[0;31m\]"
+YELLOW="\[\033[0;33m\]"
+GREEN="\[\033[0;32m\]"
+PURPLE="\[\033[0;35m\]"
+LIGHT_GREY="\[\033[0;37m\]"
+DARK_GREY="\[\033[1;30m\]"
+NOCOLOR="\[\033[0m\]"
+
 black=$(tput -Txterm setaf 0)
 red=$(tput -Txterm setaf 1)
 green=$(tput -Txterm setaf 2)
@@ -43,12 +53,3 @@ reset=$(tput -Txterm sgr0)
 
 # Nicely formatted terminal prompt
 export PS1='\n\[$bold\]\[$black\][\[$dk_blue\]\@\[$black\]]-[\[$green\]\u\[$yellow\]@\[$green\]\h\[$black\]]-[\[$pink\]\w\[$black\]]\[\033[0;33m\]$(__vcs_name) \[\033[00m\]\[$reset\]\n\[$reset\]\$ '
-
-alias ls='ls -F --color=always'
-alias dir='dir -F --color=always'
-alias ll='ls -l'
-alias cp='cp -iv'
-alias rm='rm -i'
-alias mv='mv -iv'
-alias grep='grep --color=auto -in'
-alias ..='cd ..'

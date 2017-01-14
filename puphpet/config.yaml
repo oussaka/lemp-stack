@@ -101,6 +101,7 @@ server:
         - varnish
         - gcc
         - make
+        - zsh
         - autoconf
         - libc-dev
         - pkg-config
