@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-RED='\e[31m'
-GREEN='\e[32m'
-YELLOW='\e[33m'
-BLUE='\e[34m'
-NOCOLOR='\e[0m'
-
-
 echo -e "${YELLOW} \e[1m <<< ::: COMPOSER PACKAGES INSTALLATION ::: >>>"
 # Composer Parameters
 # List any global Composer packages that you want to install
@@ -22,7 +15,6 @@ GITHUB_TOKEN="3b4abe53acc7164ffd79ce8744b8e6dd7071b785"
 
 echo -e "${NOCOLOR}"
 # /bin/bash ./composer.sh $GITHUB_TOKEN "${COMPOSER_PACKAGES[@]}"
-
 
 
 # Test if PHP is installed
@@ -104,10 +96,11 @@ for i in `seq 0 $(( ${#COMPOSER_PACKAGES[@]} ))` ; do
                 . /home/vagrant/.profile
             fi
         fi
-        echo -e "${NOCOLOR}"
+
         if [[ $HHVM_IS_INSTALLED -eq 0 ]]; then
             hhvm -v ResourceLimit.SocketDefaultTimeout=30 -v Http.SlowQueryThreshold=30000 -v Eval.Jit=false /usr/local/bin/composer global require ${COMPOSER_PACKAGES[i]}
         else
+            sudo chmod -R 777 ~/.composer/
             composer global require ${COMPOSER_PACKAGES[i]}
         fi
     fi
