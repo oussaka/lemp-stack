@@ -24,3 +24,6 @@ alias gpol="git push origin live"
 alias gpom="git push origin master"
 alias gpos="git push origin stable"
 alias gs="git status"
+
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
