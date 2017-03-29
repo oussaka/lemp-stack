@@ -266,7 +266,7 @@ php:
         pear: {  }
         pecl:
             - memcache
-            - redis
+            # - redis
     ini:
         display_errors: 'On'
         error_reporting: '-1'
@@ -413,7 +413,7 @@ mongodb:
             user: user
             password: pass
 redis:
-    install: '1'
+    install: '0'
     settings:
         port: '6379'
 sqlite:
