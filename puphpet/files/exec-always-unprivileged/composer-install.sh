@@ -98,10 +98,10 @@ for i in `seq 0 $(( ${#COMPOSER_PACKAGES[@]} ))` ; do
         fi
 
         if [[ $HHVM_IS_INSTALLED -eq 0 ]]; then
-            hhvm -v ResourceLimit.SocketDefaultTimeout=30 -v Http.SlowQueryThreshold=30000 -v Eval.Jit=false /usr/local/bin/composer global require ${COMPOSER_PACKAGES[i]}
+            hhvm -v ResourceLimit.SocketDefaultTimeout=30 -v Http.SlowQueryThreshold=30000 -v Eval.Jit=false /usr/local/bin/composer global require ${COMPOSER_PACKAGES[i]} --no-progress
         else
             sudo chmod -R 777 ~/.composer/
-            composer global require ${COMPOSER_PACKAGES[i]}
+            composer global require ${COMPOSER_PACKAGES[i]} --no-progress
         fi
     fi
 
