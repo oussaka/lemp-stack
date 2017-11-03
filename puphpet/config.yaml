@@ -4,7 +4,7 @@ vagrantfile:
         provider:
             local:
                 box: puphpet/ubuntu1604-x64
-                box_url: puphpet/ubuntu1604-x64
+                box_url: 'false'
                 box_version: '0'
                 chosen_virtualizer: virtualbox
                 virtualizers:
@@ -37,8 +37,14 @@ vagrantfile:
                                 vflmnfp_x90aslegshzp:
                                     host: '8000'
                                     guest: '8000'
-                        memory: '1024'
-                        cpus: '1'
+                                vflmnfp_wlao879xgr9l:
+                                    host: '9200'
+                                    guest: '9200'
+                                vflmnfp_wlao879xgr92:
+                                    host: '9100'
+                                    guest: '9100'
+                        memory: '2048'
+                        cpus: '2'
         provision:
             puppet:
                 manifests_path: puphpet/puppet/manifests
@@ -50,9 +56,12 @@ vagrantfile:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
             vflsf_y521za732lry:
+                owner: www-data
+                group: www-data
                 source: ./www
                 target: /var/www/
-                sync_type: default
+                sync_type: nfs
+                mount_options: ['actimeo=2', 'nfs_version=4', 'logging=on']
                 smb:
                     smb_host: ''
                     smb_username: ''
@@ -69,8 +78,6 @@ vagrantfile:
                         - .vagrant/
                         - .git/
                     auto: 'true'
-                owner: www-data
-                group: www-data
         usable_port_range:
             start: 10200
             stop: 10500
@@ -82,7 +89,7 @@ vagrantfile:
         username: vagrant
         guest_port: 'false'
         keep_alive: '1'
-        forward_agent: 'false'
+        forward_agent: 'true'
         forward_x11: 'false'
         shell: 'bash -l'
         insert_key: 'false'
@@ -125,6 +132,13 @@ locale:
 firewall:
     install: '1'
     rules: {  }
+resolv:
+    install: '1'
+    nameservers:
+        - 8.8.8.8
+        - 8.8.4.4
+    domainname: ''
+    searchpath: {  }
 cron:
     install: '1'
     jobs: {  }
@@ -161,6 +175,7 @@ nginx:
                     www_root: ''
                     location: /
                     autoindex: 'on'
+                    internal: 'false'
                     index_files:
                         - index.html
                         - index.htm
@@ -178,6 +193,8 @@ nginx:
                 nxvl_6hvpe4z8hr1a:
                     www_root: ''
                     location: '~ \.php$'
+                    autoindex: 'off'
+                    internal: 'false'
                     try_files:
                         - $uri
                         - $uri/
@@ -215,10 +232,10 @@ apache:
                 - 'APP_ENV dev'
             custom_fragment: ''
             ssl: '0'
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_chain: ''
-            ssl_certs_dir: ''
+            ssl_cert: LETSENCRYPT
+            ssl_key: LETSENCRYPT
+            ssl_chain: LETSENCRYPT
+            ssl_certs_dir: LETSENCRYPT
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
@@ -244,29 +261,33 @@ letsencrypt:
     install: '1'
     settings:
         email: ''
+        webserver_service: ''
     domains: {  }
 php:
     install: '1'
     settings:
-        version: '5.6'
+        version: '7.1'
     modules:
         php:
             - cli
             - intl
+            - xml
             - common
             - mcrypt
             - gd
             - curl
+            - memcache
             - memcached
             - mbstring
             - tidy
             - cgi
             - xsl
             - zip
+            - bcmath
+            - sqlite
         pear: {  }
         pecl:
-            - memcache
-            # - redis
+            - redis
     ini:
         display_errors: 'On'
         error_reporting: '-1'
@@ -293,6 +314,7 @@ xdebug:
         xdebug.remote_enable: '1'
         xdebug.remote_handler: dbgp
         xdebug.remote_port: '9000'
+        xdebug.show_error_trace: '1'
 blackfire:
     install: '0'
     settings:
@@ -330,11 +352,13 @@ nodejs:
         - bower
         - grunt-cli
         - grunt
+        - maildev
+        - lodash
         - gulp
         - yo
         - express
-        - express-generator
-        - ungit
+        - webpack
+        - redis-commander
 hhvm:
     install: '0'
     composer: '1'
@@ -380,7 +404,7 @@ mysql:
     users:
         mysqlnu_u2pp7zp9zd1s:
             name: admin
-            password: admin
+            password: passwrd
     databases: {  }
     grants:
         mysqlng_uv6n59cmf65f:
@@ -417,8 +441,7 @@ redis:
     settings:
         port: '6379'
 sqlite:
-    install: '0'
-    adminer: 0
+    install: '1'
     databases: {  }
 mailhog:
     install: '1'
@@ -449,11 +472,11 @@ rabbitmq:
 elastic_search:
     install: '1'
     settings:
-        version: 2.3.2
+        version: 2.3.1
         java_install: true
-        manage_repo: true
-        repo_version: '2.x'
-    instances: {  }
+    instances:
+        esi_4yx4ukzm7wi3:
+            name: es-01
 solr:
     install: '0'
     settings:

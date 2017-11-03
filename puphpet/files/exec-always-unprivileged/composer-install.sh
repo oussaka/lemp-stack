@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 
-echo -e "${YELLOW} \e[1m <<< ::: COMPOSER PACKAGES INSTALLATION ::: >>>"
+echo -e "${YELLOW}<<< ::: COMPOSER PACKAGES INSTALLATION ::: >>>"
 # Composer Parameters
 # List any global Composer packages that you want to install
+
+##
+## with php 7
+##install phpunit:^6.0 required :
+## codeception/codeception:^2.3
+##
 COMPOSER_PACKAGES=(
+    # # "sebastian/version=^2.0"
+    # "phpunit/phpunit=^6.3" 
+    # # "codeception/codeception=^2.3"  require phpunit<6.0
+    # "phpspec/phpspec=^4.0" 
+    # "squizlabs/php_codesniffer:2.7.1" 
+
+    "sebastian/version=^2.0"
 	"phpunit/phpunit=^5.4.0" 
 	"codeception/codeception=~2.2.7" 
 	"phpspec/phpspec=~3.2.2" 
@@ -84,16 +97,16 @@ for i in `seq 0 $(( ${#COMPOSER_PACKAGES[@]} ))` ; do
         echo ">>> Installing Global Composer Packages:"
         echo "$i: ${COMPOSER_PACKAGES[i]}"
         
-        # Add Composer's Global Bin to ~/.profile path
-        if [[ -f "/home/vagrant/.profile" ]]; then
-            if ! grep -qsc 'COMPOSER_HOME=' /home/vagrant/.profile; then
+        # Add Composer's Global Bin to ~/.bash_profile path
+        if [[ -f "/home/vagrant/.bash_profile" ]]; then
+            if ! grep -qsc 'COMPOSER_HOME=' /home/vagrant/.bash_profile; then
                 # Ensure COMPOSER_HOME variable is set. This isn't set by Composer automatically
-                printf "\n\nCOMPOSER_HOME=\"/home/vagrant/.composer\"" >> /home/vagrant/.profile
+                printf "\n\nCOMPOSER_HOME=\"/home/vagrant/.composer\"" >> /home/vagrant/.bash_profile
                 # Add composer home vendor bin dir to PATH to run globally installed executables
-                printf "\n# Add Composer Global Bin to PATH\n%s" 'export PATH=$PATH:$COMPOSER_HOME/vendor/bin' >> /home/vagrant/.profile
+                printf "\n# Add Composer Global Bin to PATH\n%s" 'export PATH=$PATH:$COMPOSER_HOME/vendor/bin' >> /home/vagrant/.bash_profile
 
-                # Source the .profile to pick up changes
-                . /home/vagrant/.profile
+                # Source the .bash_profile to pick up changes
+                . /home/vagrant/.bash_profile
             fi
         fi
 
