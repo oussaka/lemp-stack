@@ -32,13 +32,14 @@ __vcs_name() {
 }
 
 # ANSI colors: http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
-RED="\[\033[0;31m\]"
-YELLOW="\[\033[0;33m\]"
-GREEN="\[\033[0;32m\]"
-PURPLE="\[\033[0;35m\]"
-LIGHT_GREY="\[\033[0;37m\]"
-DARK_GREY="\[\033[1;30m\]"
-NOCOLOR="\[\033[0m\]"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[34m"
+PURPLE="\033[0;35m"
+DARK_GREY="\033[1;30m"
+LIGHT_GREY="\033[0;37m"
+NOCOLOR="\033[0m" # No Color
 
 black=$(tput -Txterm setaf 0)
 red=$(tput -Txterm setaf 1)
@@ -47,9 +48,18 @@ yellow=$(tput -Txterm setaf 3)
 dk_blue=$(tput -Txterm setaf 4)
 pink=$(tput -Txterm setaf 5)
 lt_blue=$(tput -Txterm setaf 6)
-
 bold=$(tput -Txterm bold)
 reset=$(tput -Txterm sgr0)
+
+# Background Colors
+BRed='\033[0;41m'
+BGreen='\033[1;42m'       # Green
+BYellow='\033[1;43m'      # Yellow
+BBlue='\033[1;44m'        # Blue
+BPurple='\033[1;45m'      # Purple
+BCyan='\033[1;46m'        # Cyan
+BWhite='\033[1;47m'       # White
+BLightGrey="\033[0;47m"
 
 # Nicely formatted terminal prompt
 export PS1='\n\[$bold\]\[$black\][\[$dk_blue\]\@\[$black\]]-[\[$green\]\u\[$yellow\]@\[$green\]\h\[$black\]]-[\[$pink\]\w\[$black\]]\[\033[0;33m\]$(__vcs_name) \[\033[00m\]\[$reset\]\n\[$reset\]\$ '

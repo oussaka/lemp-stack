@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-# echo "Nombre de paramètres : $#"
-# echo "Le 1er paramètre est : $1"
-green=$(tput -Txterm setaf 2)
-BGreen='\033[1;32m'       # Green
-BYellow='\033[1;33m'      # Yellow
-BBlue='\033[1;34m'        # Blue
-BPurple='\033[1;35m'      # Purple
-BCyan='\033[1;36m'        # Cyan
-BWhite='\033[1;37m'       # White
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-red=`tput setaf 1`
-green=`tput setaf 2`
-reset=`tput sgr0`
-
 h5aiDIRECTORY="_h5ai"
 DOCUMENTROOT="/var/www"
 NEWh5aiINSTALLED=0
@@ -24,11 +9,12 @@ cd $DOCUMENTROOT
   if [ -d $DOCUMENTROOT ] && [ ! -d "$DOCUMENTROOT/$h5aiDIRECTORY" ]; then
 
     # Control will enter here if $DIRECTORY doesn't exist.
-    echo -e ${BYellow}"Download h5ai in $currentDir directory${NC}"
+    echo -e "${YELLOW}${BWhite}<<< ::: Download h5ai in $DOCUMENTROOT directory ::: >>>${NOCOLOR}"
     # curl -O https://release.larsjung.de/h5ai/h5ai-0.29.0.zip 
-    wget https://release.larsjung.de/h5ai/h5ai-0.29.0.zip 
-    unzip h5ai-0.29.0.zip -d ./
+    wget --progress=bar:force https://release.larsjung.de/h5ai/h5ai-0.29.0.zip
+    unzip h5ai-0.29.0.zip -d ./ | pv -l >/dev/null
     # extract h5ai-0.29.0.zip
+    rm -f h5ai-0.29.0.zip
     cd $DOCUMENTROOT
     NEWh5aiINSTALLED=1
   fi
@@ -40,7 +26,7 @@ nginx -v > /dev/null 2>&1
 NGINX_IS_INSTALLED=$?
 
 if [ $APACHE_IS_INSTALLED -eq 0 ] && [ $NEWh5aiINSTALLED -eq 1 ]; then
-  echo -e "${BCyan}>>>${NC} ${Blue}Apache Server : Change ${BCyan}DirectoryIndex${NC}"
+  echo -e "${BCyan}>>>${NOCOLOR} ${Blue}Apache Server : Change ${BCyan}DirectoryIndex${NOCOLOR}"
   NEW_DIRINDEX="DirectoryIndex  index.html  index.php  /_h5ai/server/php/index.php"
 
   echo $NEW_DIRINDEX > /etc/apache2/mods-available/dir.conf
@@ -49,7 +35,7 @@ fi
 
 if [ $NGINX_IS_INSTALLED -eq 0 ] && [ $NEWh5aiINSTALLED -eq 1 ]; then
   echo ">>> Installing Nginx Server"
-  echo ">>> ${BBlue}Nginx Server : Change ${BCyan}Index${NC}"
+  echo ">>> ${BBlue}Nginx Server : Change ${BCyan}Index${NOCOLOR}"
   # nginx 1.2: in nginx.conf set for example:
   # index  index.html  index.php  /_h5ai/server/php/index.php;
 

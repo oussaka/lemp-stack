@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
 
-echo -e "${YELLOW}<<< ::: COMPOSER PACKAGES INSTALLATION ::: >>>"
+echo -e "${YELLOW}${BLightGrey}<<< ::: COMPOSER PACKAGES INSTALLATION ::: >>>${NOCOLOR}"
+
 # Composer Parameters
 # List any global Composer packages that you want to install
 
-##
-## with php 7
-##install phpunit:^6.0 required :
-## codeception/codeception:^2.3
-##
-COMPOSER_PACKAGES=(
-    # # "sebastian/version=^2.0"
-    # "phpunit/phpunit=^6.3" 
-    # # "codeception/codeception=^2.3"  require phpunit<6.0
-    # "phpspec/phpspec=^4.0" 
-    # "squizlabs/php_codesniffer:2.7.1" 
+exit 0;
 
-    "sebastian/version=^2.0"
-	"phpunit/phpunit=^5.4.0" 
-	"codeception/codeception=~2.2.7" 
-	"phpspec/phpspec=~3.2.2" 
-	"squizlabs/php_codesniffer:2.7.1" 
+COMPOSER_PACKAGES=(
+    "phpunit/phpunit=^8.0"
+    # "codeception/codeception=^2.6@dev"
+    "phpspec/phpspec=^5.1"
+    "squizlabs/php_codesniffer=^3.4"
 )
 GITHUB_TOKEN="3b4abe53acc7164ffd79ce8744b8e6dd7071b785"
 
@@ -95,7 +86,7 @@ for i in `seq 0 $(( ${#COMPOSER_PACKAGES[@]} ))` ; do
     if [[ ${COMPOSER_PACKAGES[i]} != "" ]]; then
 
         echo ">>> Installing Global Composer Packages:"
-        echo "$i: ${COMPOSER_PACKAGES[i]}"
+        echo "$((i+1)): ${COMPOSER_PACKAGES[i]}"
         
         # Add Composer's Global Bin to ~/.bash_profile path
         if [[ -f "/home/vagrant/.bash_profile" ]]; then
@@ -120,6 +111,5 @@ for i in `seq 0 $(( ${#COMPOSER_PACKAGES[@]} ))` ; do
 
 done
 
-echo -e "${GREEN}[SUCCESS] Composer install packages. Well done ;-)"
-echo -e "${NOCOLOR}"
+echo -e "${yellow}${BBlue}[SUCCESS] Composer install packages. Well done ;-)${NOCOLOR}"
 exit 0
